@@ -1,0 +1,112 @@
+if($text == "/start"){
+bot('sendmessage',[
+'chat_id'=>$chat_id,
+'text'=>"
+<b>
+Hello welcome my friend 🤠
+
+What does this robot 🤖 do:
+
+Submit the name of your favorite movie and we will show you the names of similar movies. 🔎 Latest searches: Batman, Addams family and...
+</b>
+",
+'parse_mode'=>"html",
+'reply_markup' => json_encode([
+'inline_keyboard' => [
+[['text'=>"Search Movie 🎬🔎", 'callback_data'=>"msh"]],
+[['text'=>"Support message 👨‍💻", 'url'=>"https://t.me/aminrngbr"]],
+[['text'=>"channel telegram 🦄⚡", 'url'=>"https://t.me/sourcetalar"]],
+],
+])
+]);
+}
+//====
+if($data == "msh"){
+	file_put_contents("./{$from_id}.txt", "sdr");
+	file_put_contents("./{$from_id}.jik.txt", bot('editmessagetext', [
+	'chat_id'=>$chat_id,
+	'message_id'=>$messageid,
+	'text'=>"<b>Very well, now send the name of your movie 🔎:</b>",
+	'parse_mode'=>"html",
+	])->result->message_id);
+	$pyam = file_get_contents("./{$from_id}.jik.txt");
+	}
+if($sys == "sdr"){
+	file_put_contents("./{$from_id}.txt", "none");
+	$json = json_decode(file_get_contents("http://api-man.robotapi.xyz/api/moviemap/?type=search&search={$text}"), true);
+	if($json['result'] == Null){
+bot('sendmessage',[
+'chat_id'=>$chat_id,
+'message_id'=>$messageid,
+'text'=>"
+<b>
+No, I did not find a movie similar to this name ☹️❗️
+</b>
+",
+'parse_mode'=>"html",
+'reply_markup' => json_encode([
+'inline_keyboard' => [
+[['text'=>"Search Movie 🎬🔎", 'callback_data'=>"msh"]],
+],
+])
+]);
+}else{
+$fopen = fopen("./{$from_id}.xn.txt", "a");
+bot('deleteMessage',[
+'chat_id'=>$chat_id,
+'message_id'=>$pyam,
+]);
+for($i = 0; $i < count($json['result']); $i++){
+$ghio = $json['result'][$i]['name'];
+fwrite($fopen, "$ghio \n");
+}
+fclose($fopen);
+$fgts = file_get_contents("./{$from_id}.xn.txt");
+bot('sendmessage',[
+'chat_id'=>$chat_id,
+'text'=>"
+<b>
+Similar movies with this name 🤠✅️ :
+--------------------------------------------------------------
+</b>
+<code>
+$fgts
+</code>
+
+",
+'parse_mode'=>"html",
+'reply_markup' => json_encode([
+'inline_keyboard' => [
+[['text'=>"Search Movie 🎬🔎", 'callback_data'=>"msh"]],
+],
+])
+]);
+unlink("./{$from_id}.xn.txt");
+			}
+	}
+////=========
+if($data == "web"){
+	file_put_contents("./{$from_id}.txt", "web");
+	bot('editmessagetext', [
+	'chat_id'=>$chat_id,
+	'message_id'=>$messageid,
+	'text'=>"Format: http-https are supported. 💯
+👾Ok, please send us the website address with http:",
+	'parse_mode'=>"html",
+	]);
+	}
+	if($sys == "web"){
+		file_put_contents("./{$from_id}.txt", "none");
+		$web = json_encode(file_get_contents($text), 1000);
+		$getsr = json_decode($web, true);
+		file_put_contents("./web.{$from_id}.html", $getsr);
+		bot('senddocument', [
+		'chat_id'=>$chat_id,
+		'document'=>"https://api-man.robotapi.xyz/bot/web.{$from_id}.html",
+'reply_markup' => json_encode([
+'inline_keyboard' => [
+[['text'=>"Search Movie 🎬🔎", 'callback_data'=>"msh"]],
+],
+])
+		]);
+		}
